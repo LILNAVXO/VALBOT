@@ -44,7 +44,7 @@ async def on_ready():
     await client.change_presence(activity=activity)
     check_new_video.start()
 
-@tasks.loop(minutes=5)
+@tasks.loop(minutes=1)
 async def check_new_video():
     global latest_vid_id
 
