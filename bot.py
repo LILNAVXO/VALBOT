@@ -10,13 +10,15 @@ load_dotenv()
 bot_token = os.getenv("TOKEN")
 utube_api = os.getenv("UAPI")
 val_id = os.getenv("VAL_CHANNEL_ID")
-dan_id = os.getenv("DAN_CHANNEL_ID")
+blackie_id = os.getenv("BLACKIE_CHANNEL_ID")
+chuthulu_id = os.getenv("CHUTHULU_CHANNEL_ID")
+nightmare_id = os.getenv("NIGHTMARE_CHANNEL_ID")
 vnot_id = os.getenv("VAL_NOTI_CHANNEL")
-dnot_id = os.getenv("DAN_NOTI_CHANNEL")
+cnot_id = os.getenv("COMMON_NOTI_CHANNEL")
 rid = int(os.getenv("ROLE_ID"))  
 guild_id = int(os.getenv("GUILD_ID"))  
 
-channel_ids = [val_id, dan_id]
+channel_ids = [val_id, blackie_id, chuthulu_id, nightmare_id]
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -30,6 +32,7 @@ utube = build('youtube', 'v3', developerKey=utube_api)
 
 latest_vid_id = {}
 
+
 @client.event
 async def on_ready():
     global guild
@@ -42,6 +45,7 @@ async def on_ready():
     print(f"Logged in as {client.user.name}")
     await client.change_presence(activity=activity)
     check_new_video.start()
+
 
 @tasks.loop(minutes=1)
 async def check_new_video():
@@ -81,23 +85,42 @@ async def check_new_video():
                         except Exception as error:
                             print(f"Failed to send message in {vnot_id}: {error}")
 
-                    elif channel_id == dan_id:
-                        channel = client.get_channel(int(dnot_id))
+                    elif channel_id == blackie_id:
+                        channel = client.get_channel(int(cnot_id))
                         if channel is None:
-                            print(f"Notification channel with ID {dnot_id} not found.")
+                            print(f"Notification channel with ID {cnot_id} not found")
                             continue
                         try:
-                            await channel.send(f"Daniel5k just uploaded a new video **{video_title}** Go check it out!!\n{video_url}\n{role.mention}")
+                            await channel.send(f"Mean just uploaded a new video **{video_title}** Go check it out!!\n{video_url}\n{role.mention}")
                         except Exception as error:
-                            print(f"Failed to send message in {dnot_id}: {error}")
-
+                            print(f"Failed to send message in {cnot_id}: {error}")
+                    elif channel_id == chuthulu_id:
+                        channel = client.get_channel(int(cnot_id))
+                        if channel is None:
+                            print(f"Notification channel with ID {cnot_id} not found")
+                            continue
+                        try:
+                            await channel.send(f"not so great cthulhu just uploaded a new video **{video_title}** Go check it out!!\n{video_url}\n{role.mention}")
+                        except Exception as error:
+                            print(f"Failed to send message in {cnot_id}: {error}")
+                    elif channel_id == nightmare_id:
+                        channel = client.get_channel(int(cnot_id))
+                        if channel is None:
+                            print(f"Notification channel with ID {cnot_id} not found")
+                            continue
+                        try:
+                            await channel.send(f"gamerXamit just uploaded a new video **{video_title}** Go check it out!!\n{video_url}\n{role.mention}")
+                        except Exception as error:
+                            print(f"Failed to send message in {cnot_id}: {error}")
         except KeyError as e:
             print(f"Error: {e}")
         except Exception as error:
             print(f"Error: {error}")
 
+
 def main():
     client.run(bot_token)
+
 
 if __name__ == "__main__":
     main()
